@@ -5,6 +5,11 @@ import numpy as np
 # DO NOT DELETE THIS
 model.np_init()
 
+# creating directory to save model parameters and objects
+save_path = model.create_directory()
+
+print(save_path)
+
 manual_setup = False
 
 if manual_setup:
@@ -172,5 +177,6 @@ else:
         # Now predict on test data
         nn.predict(X_test, batch_size=batch_size_choice)
 
-        
+        # ask the user if they want to save the model
+        model.save_prompt(model=nn, path=save_path)
         
