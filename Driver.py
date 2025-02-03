@@ -8,13 +8,66 @@ model.np_init()
 # creating directory to save model parameters and objects
 save_path = model.create_directory()
 
-print(save_path)
 
-manual_setup = False
+manual_setup = True
 
 if manual_setup:
-    # hardcode your model here
-    pass
+    # Importing dataset
+    path = r"C:\Users\Matt\Desktop\Research\combined.csv"
+    reader = model.CustomCSVReader(filepath=path, delimiter=',')
+
+    # Get input features
+    X = reader.get_columns(column_names=['MAXDIST', 'TOF', 'APOGEE'])
+
+    # Get output feature
+    y = reader.get_column('class').astype(int) -1
+
+    # Split between training data and validation / testing data
+    X_train, X_temp, y_train, y_temp = model.custom_train_test_split(X, y, test_size=0.3, random_state=42)
+
+    # Split validation / testing data
+    X_val, X_test, y_val, y_test = model.custom_train_test_split(X_temp, y_temp, test_size=0.5, random_state=42)
+
+    # Normalizing data
+    X_train, X_test, X_val = model.normalize(X_train, X_test, X_val, has_val=True)
+    
+    # Building classifier
+    #nn = model.Model()
+    #nn.add(model.Layer_Dense(3, 32))
+    #nn.add(model.Activation_ReLU())
+    #nn.add(model.Layer_Dense(32, 18))
+    #nn.add(model.Activation_Softmax())
+    #nn.set(
+        #loss=model.Loss_CategoricalCrossentropy(),
+        #optimizer=model.Optimizer_Adam(learning_rate=0.001, decay=0,
+                                       #epsilon=1e-7, beta_1=0.9,
+                                       #beta_2=0.999),
+        #accuracy=model.Accuracy_Categorical()
+    #)
+    #nn.finalize()
+
+    # Train the model
+    #nn.train(X_train, y_train, validation_data=(X_val, y_val),
+            #epochs=1000, batch_size=128, print_every=100)
+    
+    # Load model params instead of training
+    #nn.load_parameters('Test Params')
+
+    # Load entire model instead of building and training
+    nn = model.Model.load('Test Model')
+    
+    # Evaluate on test data
+    nn.evaluate(X_test, y_test)
+
+    # Make predictions on testing data (this could be used for plotting)
+    #nn.predict(X_test, batch_size=128)
+
+    # Method 1 to save the model: Save weight and biases
+    #nn.save_parameters('Test Params')
+
+    # Method 2 to save the model: Save entire model object
+    #nn.save('Test Model')
+
 else:
     if __name__ == '__main__':
         
@@ -179,4 +232,4 @@ else:
 
         # ask the user if they want to save the model
         model.save_prompt(model=nn, path=save_path)
-        
+
