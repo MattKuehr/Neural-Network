@@ -1447,3 +1447,51 @@ def create_data_mnist(path):
     
     # And return all the data
     return X, y, X_test, y_test
+
+
+'''
+Helper functions for driver
+'''
+
+def save_prompt(model, path):
+
+    # ask the user if they want to save the model
+    saving = input('Do you want to save the model (y/n): ').lower().strip()
+
+    if saving == 'y':
+        saveType = int(input('Do you want to do a shallow save (just the weights and biases)'
+                            'or deep save (all the model attributes)? Enter 1 for shallow'
+                            'or 2 for deep: '))
+        
+        name = input('What do you want to name the model: ').strip()
+            
+        if saveType == 1:
+            params_file_path = os.path.join(path, name)  
+            model.save_parameters(params_file_path)  
+        elif saveType == 2:
+            model_file_path = os.path.join(path, name)  
+            model.save(model_file_path)  
+        else:
+            # prompt the user again
+            print('Incorrect input, please try again.')
+            save_prompt(model, path)  
+    else:
+        exit()
+
+    
+def create_directory():
+     # Determine the directory where the current script is located
+    script_directory = os.path.dirname(os.path.abspath(__file__))
+        
+    # Define the path for the "Models" folder within that directory
+    models_directory = os.path.join(script_directory, "Models")
+        
+    # Check if the "Models" folder exists; if not, create it
+    if not os.path.exists(models_directory):
+        os.makedirs(models_directory)
+        print(f'"Models" folder created at: {models_directory}')
+    else:
+        print(f'"Models" folder already exists at: {models_directory}')
+    
+    # return directory to "Models" folder
+    return models_directory
