@@ -13,11 +13,11 @@ manual_setup = True
 
 if manual_setup:
     # Importing dataset
-    path = r"C:\Users\Matt\Desktop\Research\combined.csv"
+    path = r"C:\Users\Matt\Desktop\Research\example_file"
     reader = model.CustomCSVReader(filepath=path, delimiter=',')
 
     # Get input features
-    X = reader.get_columns(column_names=['MAXDIST', 'TOF', 'APOGEE'])
+    X = reader.get_columns(column_names=['var1', 'var2', 'var3'])
 
     # Get output feature
     y = reader.get_column('class').astype(int) -1
